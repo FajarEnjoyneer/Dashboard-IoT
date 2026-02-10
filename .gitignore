@@ -6,3 +6,4 @@ mosquitto/data/
 mosquitto/log/
 influxdb/data/
 nodered/data/node_modules/
+volumes/

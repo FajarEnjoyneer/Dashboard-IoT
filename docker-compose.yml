@@ -15,12 +15,15 @@ services:
       DOCKER_INFLUXDB_INIT_BUCKET: "${INFLUX_BUCKET}"
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "${INFLUX_TOKEN}"
     volumes:
-      - ./influxdb/data:/var/lib/influxdb2
+      - ./volumes/influxdb:/var/lib/influxdb2
     networks:
       - iot-net
 
   grafana:  # Grafana Service
-    image: grafana/grafana-enterprise:latest
+    # Local development build from services/grafana
+    build:
+      context: ./services/grafana
+      dockerfile: Dockerfile
     container_name: grafana-opt
     restart: unless-stopped
     depends_on:
@@ -37,10 +40,12 @@ services:
       GF_NEWS_NEWS_FEED_ENABLED: "${GF_NEWS_NEWS_FEED_ENABLED:-false}"
       GF_LIVE_ENABLED: "false"
     volumes:
-      - ./grafana/public:/usr/share/grafana/public
-      - ./grafana/provisioning:/etc/grafana/provisioning
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
-      - ./grafana/data:/var/lib/grafana
+      # Mount source code for live development
+      - ./services/grafana/public:/usr/share/grafana/public
+      - ./services/grafana/provisioning:/etc/grafana/provisioning
+      - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+      # Data persistence
+      - ./volumes/grafana:/var/lib/grafana
     networks:
       - iot-net
 
@@ -89,22 +94,28 @@ services:
       TARGET_DS: "influxdb-auto"
       GRAFANA_URL: "http://grafana:3000"
     volumes:
-      - ./uploads:/uploads
-      - ./grafana/dashboards:/dashboards
-      - ./grafana/import-dashboards.sh:/import-dashboards.sh
+      - ./volumes/uploads:/uploads
+      - ./services/grafana/dashboards:/dashboards
+      - ./services/grafana/scripts/import.sh:/import-dashboards.sh
     networks:
       - iot-net
     restart: "no"
     entrypoint: ["/bin/sh", "/import-dashboards.sh"]
 
   nodered:  # Node-RED Service
-    image: nodered/node-red:latest
+    build:
+      context: ./services/nodered
+      dockerfile: Dockerfile
     container_name: nodered-opt
     restart: unless-stopped
     ports:
       - "1880:1880"
     volumes:
-      - ./nodered/data:/data
+      # Mount data for persistence
+      - ./volumes/nodered:/data
+      # Mount source for dev editing
+      - ./services/nodered/flows.json:/data/flows.json
+      - ./services/nodered/settings.js:/data/settings.js
     environment:
       TZ: "Asia/Jakarta"
     networks:
@@ -118,9 +129,9 @@ services:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - ./mosquitto/data:/mosquitto/data
-      - ./mosquitto/log:/mosquitto/log
+      - ./services/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./volumes/mosquitto/data:/mosquitto/data
+      - ./volumes/mosquitto/log:/mosquitto/log
     networks:
       - iot-net
 

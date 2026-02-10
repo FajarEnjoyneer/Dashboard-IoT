@@ -29,12 +29,12 @@ jobs:
       matrix:
         include:
           - service: grafana
-            dockerfile: grafana/Dockerfile
-            context: grafana
+            dockerfile: services/grafana/Dockerfile
+            context: services/grafana
             image-suffix: -grafana
           - service: nodered
-            dockerfile: nodered/Dockerfile
-            context: nodered
+            dockerfile: services/nodered/Dockerfile
+            context: services/nodered
             image-suffix: -nodered
 
     steps:
