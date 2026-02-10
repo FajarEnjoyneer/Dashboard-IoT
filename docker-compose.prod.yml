@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   influxdb:
     image: influxdb:2.7
@@ -20,8 +18,8 @@ services:
       - iot-net
 
   grafana:
-    # Replace 'your-username' with your actual GitHub username or organization
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-your-username}/dashboard-iiot-grafana:latest
+    # Replace 'fajarenjoyneer' with your actual GitHub username or organization
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-fajarenjoyneer}/dashboard-iot-grafana:latest
     container_name: grafana-prod
     restart: unless-stopped
     depends_on:
@@ -41,8 +39,8 @@ services:
       - iot-net
       
   nodered:
-    # Replace 'your-username' with your actual GitHub username or organization
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-your-username}/dashboard-iiot-nodered:latest
+    # Replace 'fajarenjoyneer' with your actual GitHub username or organization
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-fajarenjoyneer}/dashboard-iot-nodered:latest
     container_name: nodered-prod
     restart: unless-stopped
     ports:
