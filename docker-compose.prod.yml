@@ -31,6 +31,7 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: "${GF_ADMIN_PASSWORD}"
       GF_SERVER_DOMAIN: "${GF_SERVER_DOMAIN:-localhost}"
       GF_LOG_MODE: "console"
+      GF_USERS_DEFAULT_THEME: "light"
     # In production, we don't bind-mount code (provisioning/dashboards/public) 
     # because it's baked into the image. We only mount data.
     volumes:
