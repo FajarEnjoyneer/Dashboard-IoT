@@ -1,0 +1,66 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\"/>\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/>\n<title>Industrial IoT Dashboard — Transparent + Adaptive Text</title>\n\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\"/>\n\n<style>\n  /* Static transparent layout (no :root, no CSS variables for global theme) */\n  html, body {\n    height: 100%;\n    width: 100%;\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n  }\n\n  body{\n    font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif;\n    background: transparent; /* requested */\n    color: #222; /* default fallback */\n    transition: color .22s ease;\n    -webkit-font-smoothing: antialiased;\n  }\n\n  .wrap {\n    max-width: 1200px;\n    margin: 0 auto;\n    padding: clamp(12px, 2.5vw, 28px);\n    box-sizing: border-box;\n  }\n\n  .page-title {\n    margin: 0 0 clamp(10px, 2vh, 20px);\n    font-size: clamp(1.2rem, 2.4vw, 2rem);\n    font-weight: 700;\n    text-align: left;\n    /* keep default color, JS will override on theme change */\n    color: #222;\n    padding: 0 4px;\n    transition: color .22s ease;\n  }\n\n  .dashboard{\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));\n    gap: clamp(10px, 1.8vw, 24px);\n    align-items: start;\n  }\n\n  .card{\n    width: 100%;\n    min-height: 110px;\n    max-width: 260px;\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    justify-content: center;\n    gap: 8px;\n    padding: clamp(12px, 2.2vw, 24px);\n    border-radius: 10px;\n    background: #2c3e50;\n    color: #fff;\n    text-align: center;\n    cursor: pointer;\n    box-shadow: 0 6px 18px rgba(0,0,0,0.12);\n    transition: transform .14s ease, background .16s ease;\n  }\n  .card:hover {\n    transform: translateY(-6px);\n    background: #34495e;\n  }\n  .card i{ font-size: clamp(1.2rem, 3vw, 2.2rem); }\n\n  .label{\n    font-size: clamp(.92rem, 1.1vw, 1.05rem);\n    font-weight: 400;\n    color: inherit;\n    background-color: transparent;\n  }\n\n  .card .label,\n  .card .label * {\n    background-color: transparent !important;\n    background: transparent !important;\n    color: inherit !important;\n  }\n\n  .card mark { background: transparent !important; color: inherit !important; }\n  .card ::selection { background: transparent !important; color: inherit !important; }\n\n  .logo{\n    margin: clamp(20px, 4vh, 48px) 0 36px;\n    text-align: center;\n  }\n  .logo img{\n    width: clamp(100px, 12vw, 160px);\n    display: block;\n    margin: 0 auto;\n  }\n  .company-name{\n    margin-top: 12px;\n    font-weight: 700;\n    color: #222; /* default */\n    opacity: .95;\n    transition: color .22s ease;\n  }\n\n  @media(max-width:420px){\n    .dashboard{ grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }\n    .card{ min-height: 90px; padding: 12px; }\n    .page-title{ font-size: 1.2rem; }\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <h1 class=\"page-title\">Industrial IoT Dashboard</h1>\n\n    <div class=\"dashboard\" role=\"navigation\" aria-label=\"Dashboard menu\">\n      <div class=\"card\" onclick=\"location.href='/d/8946a673-784c-4b3f-8c66-f173a3ab9da8/summary-page?kiosk=tv'\">\n        <i class=\"fas fa-file-alt\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Summary</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/ae4e0922-9b0c-4639-bee6-c02c77573f8b/oer-page?kiosk=tv'\">\n        <i class=\"fas fa-chart-bar\" aria-hidden=\"true\"></i>\n        <div class=\"label\">OER</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/81c00574-f791-4197-90bc-7e50c57c83cd/bst-tanks-page?kiosk=tv'\">\n        <i class=\"fas fa-glass-whiskey\" aria-hidden=\"true\"></i>\n        <div class=\"label\">BST Tanks</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/90306c76-3e2b-4538-b684-158b0944900f/boiler-and-bpv-page?kiosk=tv'\">\n        <i class=\"fas fa-gas-pump\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Boiler & BPV</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/fbd53d8c-1542-46df-a164-bb33a94657f4/steamers-page?kiosk=tv'\">\n        <i class=\"fas fa-fire\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Steamers</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/32ef6ebd-6331-4db4-beff-8cceac71765b/digester-page?kiosk=tv'\">\n        <i class=\"fas fa-recycle\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Digester</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/a48ca676-3924-4b2e-8442-c02343f7a781/screw-press-page?kiosk=tv'\">\n        <i class=\"fas fa-compress-arrows-alt\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Screw Press</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/7fcb2917-9ade-47da-95a2-d35ba7f2ab30/cst-page?kiosk=tv'\">\n        <i class=\"fas fa-database\" aria-hidden=\"true\"></i>\n        <div class=\"label\">CST</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/dd4af312-7ea5-4ca5-993c-51d7ae41eeba/fuel-tanks-page?kiosk=tv'\">\n        <i class=\"fas fa-gas-pump\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Fuel Tanks</div>\n      </div>\n      <div class=\"card\" onclick=\"location.href='/d/a87985e2-87fa-46d7-b591-7b2a961abb4d/flowmeter-page?kiosk=tv'\">\n        <i class=\"fas fa-faucet\" aria-hidden=\"true\"></i>\n        <div class=\"label\">Flowmeter Menu</div>\n      </div>\n    </div>\n\n    <div class=\"logo\">\n      <img src=\"/public/img/kencana.png\" alt=\"Logo KAN\">\n      <div class=\"company-name\">Kencana Andalan Nusantara</div>\n    </div>\n  </div>\n\n<script>\n/*\n  Lightweight theme detector/updater for specific text elements.\n  - Updates .page-title and .company-name colors to fit dark/light theme\n  - No CSS variables, no reload. Works best if parent is same-origin.\n*/\n\n(function(){\n  const TITLE_SEL = '.page-title';\n  const COMPANY_SEL = '.company-name';\n\n  function setTextColors(isDark){\n    const title = document.querySelector(TITLE_SEL);\n    const company = document.querySelector(COMPANY_SEL);\n    if (title) title.style.color = isDark ? '#f8f4f4' : '#222';\n    if (company) company.style.color = isDark ? '#f8f4f4' : '#222';\n  }\n\n  function getGrafanaTheme(){\n    // try reading parent document attributes/classes (same-origin only)\n    try {\n      const p = window.parent && window.parent.document;\n      if (!p) return null;\n      const dataTheme = p.documentElement.getAttribute('data-theme');\n      if (dataTheme === 'dark' || p.body.classList.contains('theme-dark') || p.documentElement.classList.contains('theme-dark')) return 'dark';\n      if (dataTheme === 'light' || p.body.classList.contains('theme-light') || p.documentElement.classList.contains('theme-light')) return 'light';\n    } catch(e){\n      // cross-origin or other error -> return null so fallback is used\n    }\n    // fallback to system preference\n    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';\n  }\n\n  // debounce helper\n  function debounce(fn, delay){\n    let t;\n    return function(...a){\n      clearTimeout(t);\n      t = setTimeout(()=> fn.apply(this,a), delay);\n    };\n  }\n\n  // apply initial\n  const initial = getGrafanaTheme();\n  setTextColors(initial === 'dark');\n\n  // observe parent if same-origin\n  try {\n    if (window.parent && window.parent.document){\n      const pDoc = window.parent.document;\n      const observer = new MutationObserver(debounce(() => {\n        const theme = getGrafanaTheme();\n        setTextColors(theme === 'dark');\n      }, 80));\n      observer.observe(pDoc.documentElement, { attributes:true, attributeFilter:['class','data-theme'] });\n      observer.observe(pDoc.body, { attributes:true, attributeFilter:['class','data-theme'] });\n      // keep ref to avoid GC\n      window.__adaptiveTextObserver = observer;\n    }\n  } catch(e){\n    // ignore cross-origin\n  }\n\n  // system preference listener as fallback\n  if (window.matchMedia){\n    const mq = window.matchMedia('(prefers-color-scheme: dark)');\n    const onChange = debounce((ev) => {\n      const isDark = (typeof ev.matches === 'boolean') ? ev.matches : mq.matches;\n      setTextColors(isDark);\n    }, 80);\n    if (mq.addEventListener) mq.addEventListener('change', onChange);\n    else if (mq.addListener) mq.addListener(onChange);\n  }\n\n})();\n</script>\n</body>\n</html>\n",
+        "mode": "html"
+      },
+      "pluginVersion": "12.1.1",
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 41,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Home Page",
+  "uid": "b848c81e-043e-4cf2-8c0a-1917e590acb7",
+  "version": 15
+}

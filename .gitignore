@@ -1,0 +1,8 @@
+.env
+grafana/public/api-merged.json
+grafana/data/
+Digital-Twin/*
+mosquitto/data/
+mosquitto/log/
+influxdb/data/
+nodered/data/node_modules/

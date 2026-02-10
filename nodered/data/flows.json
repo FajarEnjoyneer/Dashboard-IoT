@@ -1,0 +1,625 @@
+[
+    {
+        "id": "3d33c343cf071765",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flowmeter Data Fetch",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_get_data_native",
+        "type": "tab",
+        "label": "Native Flowmeter Fetch",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "mqtt_test_tab",
+        "type": "tab",
+        "label": "MQTT Test",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "225831ad96b63749",
+        "type": "mqtt-broker",
+        "name": "mosquitto",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f69e160e6b603945",
+        "type": "mqtt-broker",
+        "name": "test",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "74c083aa3c0925e7",
+        "type": "influxdb",
+        "hostname": "influxdb",
+        "port": 8086,
+        "protocol": "http",
+        "database": "Data-IoT",
+        "name": "Influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "ee59ad5652993b7a",
+        "type": "mqtt in",
+        "z": "3d33c343cf071765",
+        "name": "",
+        "topic": "data",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "225831ad96b63749",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 200,
+        "wires": [
+            [
+                "e9a70e2e5f8cf28d"
+            ]
+        ]
+    },
+    {
+        "id": "9916aad9acbd08c3",
+        "type": "debug",
+        "z": "3d33c343cf071765",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e9a70e2e5f8cf28d",
+        "type": "function",
+        "z": "3d33c343cf071765",
+        "name": "Slave 1",
+        "func": "if (msg.payload && msg.payload.data_raw && msg.payload.data_raw.server_id === 1) {\n    return msg;\n}\n\nreturn null; \n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 200,
+        "wires": [
+            [
+                "701d44bbeae6adf9"
+            ]
+        ]
+    },
+    {
+        "id": "bddcbce3f0c4b379",
+        "type": "function",
+        "z": "3d33c343cf071765",
+        "name": "Mapping",
+        "func": "function mapValue(x, inMin, inMax, outMin, outMax) {\n    return ((x - inMin) * (outMax - outMin) / (inMax - inMin)) + outMin;\n}\n\nif (\n    msg.payload &&\n    msg.payload.data_raw &&\n    Array.isArray(msg.payload.data_raw.data)\n) {\n    var d = msg.payload.data_raw.data;\n    var newMsg = {};\n\n    newMsg.vib_sp1 = mapValue(d[0], 0, 20000, 0, 6);\n\n    msg.payload = newMsg;\n    return msg;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "50322e13f56e2519",
+        "type": "influxdb out",
+        "z": "3d33c343cf071765",
+        "influxdb": "74c083aa3c0925e7",
+        "name": "Database",
+        "measurement": "test",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "2a32b561b81354a4",
+        "bucket": "Data-IoT",
+        "x": 740,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "701d44bbeae6adf9",
+        "type": "function",
+        "z": "3d33c343cf071765",
+        "name": "Read Modbus",
+        "func": "let input = (typeof msg.payload === \"string\") ? JSON.parse(msg.payload) : msg.payload;\n\nlet d = input.data_raw.data || [];\n\nmsg.payload = {\n    // data1: d[0] || 0,\n    // data2: d[1] || 0,\n    // data3: d[2] || 0,\n    data4: d[3] || 0,\n    // data5: d[4] || 0,\n    data6: d[5] || 0,\n    // data7: d[6] || 0,\n    data8: d[7] || 0,\n   };\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 280,
+        "wires": [
+            [
+                "9916aad9acbd08c3",
+                "50322e13f56e2519"
+            ]
+        ]
+    },
+    {
+        "id": "inject_setup",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Manual Trigger (Set Dates)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"start_date\": \"2026-01-20\", \"end_date\": \"2026-01-20\"}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 120,
+        "wires": [
+            [
+                "format_command"
+            ]
+        ]
+    },
+    {
+        "id": "format_command",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "Format Args",
+        "func": "// Expects payload to have start_date and end_date\n// e.g. { \"start_date\": \"2026-01-01\", \"end_date\": \"2026-01-02\" }\n\nconst start = msg.payload.start_date;\nconst end = msg.payload.end_date;\n\nif (!start || !end) {\n    node.error(\"Start Date and End Date are required!\");\n    return null;\n}\n\n// Format: python3 get_data.py <start> <end>\n// The exec node appends msg.payload to the command if 'append' is configured,\n// OR we can just set the command arguments directly in msg.payload if we use the 'spawn' mode or command string logic.\n\nmsg.payload = `${start} ${end}`;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "exec_python_script"
+            ]
+        ]
+    },
+    {
+        "id": "debug_stdout",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "stdout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "debug_stderr",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "stderr",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "debug_retcode",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "Return Code",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "comment_info",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Instructions",
+        "info": "1. Double click the 'Manual Trigger' node to set the Start Date and End Date in the JSON payload.\n2. Deploy.\n3. Click the button on the 'Manual Trigger' node to run.",
+        "x": 170,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "exec_python_script",
+        "type": "exec",
+        "z": "f6f2187d.f17ca8",
+        "command": "python3 /home/fajar/Project/Data-Analytics-IoT/Flowmeter/program/get_data.py",
+        "addpay": true,
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "oldrc": false,
+        "name": "Run get_data.py",
+        "x": 680,
+        "y": 120,
+        "wires": [
+            [
+                "debug_stdout"
+            ],
+            [
+                "debug_stderr"
+            ],
+            [
+                "debug_retcode"
+            ]
+        ]
+    },
+    {
+        "id": "http_influx_req",
+        "type": "http request",
+        "z": "tab_get_data_native",
+        "name": "InfluxDB Request",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "http://103.175.218.182:8083/api/v2/query?org=cf243a219e1da805",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Authorization",
+                "valueType": "other",
+                "valueValue": "Token 9oDFWDgWvMBAdBZ860Nw5EQnFJ_L1HHxqbHmMvrBuxp1esjmYwtklEHazGQkJJybMWRIdWUtVlynFPGXa0ZfAw=="
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/json"
+            },
+            {
+                "keyType": "other",
+                "keyValue": "Accept",
+                "valueType": "other",
+                "valueValue": "application/csv"
+            }
+        ],
+        "x": 1470,
+        "y": 100,
+        "wires": [
+            [
+                "41a54d0e1231159a"
+            ]
+        ]
+    },
+    {
+        "id": "fec6b8b878e010e9",
+        "type": "inject",
+        "z": "tab_get_data_native",
+        "name": "Manual Trigger",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"start_date\": \"2026-01-20\", \"end_date\": \"2026-01-20\"}",
+        "payloadType": "json",
+        "x": 860,
+        "y": 100,
+        "wires": [
+            [
+                "abc9b52b68070d64"
+            ]
+        ]
+    },
+    {
+        "id": "abc9b52b68070d64",
+        "type": "function",
+        "z": "tab_get_data_native",
+        "name": "Date Iterator",
+        "func": "const startDate = new Date(msg.payload.start_date);\nconst endDate = new Date(msg.payload.end_date);\n\n// Validate dates\nif (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {\n    node.error(\"Invalid Date Format. Use YYYY-MM-DD\");\n    return null;\n}\n\nlet currentDate = startDate;\n\nwhile (currentDate <= endDate) {\n    let dateStr = currentDate.toISOString().split('T')[0];\n    \n    // Clone msg for each iteration\n    let newMsg = RED.util.cloneMessage(msg);\n    newMsg.payload = { date: dateStr };\n    \n    // Send message\n    node.send(newMsg);\n    \n    // Increment day\n    currentDate.setDate(currentDate.getDate() + 1);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 100,
+        "wires": [
+            [
+                "2a1efef112db8cc0"
+            ]
+        ]
+    },
+    {
+        "id": "2a1efef112db8cc0",
+        "type": "function",
+        "z": "tab_get_data_native",
+        "name": "Build Flux Query",
+        "func": "const dateStr = msg.payload.date;\nconst targetDate = new Date(dateStr);\n\n// Timezone Offset Calculation (UTC-7 for WIB conversion)\n// Start: Date 00:00:00 WIB -> Previous Day 17:00:00 UTC\nlet start = new Date(targetDate);\nstart.setHours(start.getHours() - 7);\n\n// Stop: Date+1 00:00:00 WIB -> Date 17:00:00 UTC (minus 1 second handled by logic or range)\n// The python script does: (date + 1 day - 7 hours - 1 second)\nlet stop = new Date(targetDate);\nstop.setDate(stop.getDate() + 1);\nstop.setHours(stop.getHours() - 7);\nstop.setSeconds(stop.getSeconds() - 1);\n\nconst startISO = start.toISOString().replace('.000Z', 'Z');\nconst stopISO = stop.toISOString().replace('.000Z', 'Z');\n\n// Only filtering by original keys from python script\nconst original_fields = [\n    \"density_Dispatch1\",\n    \"density_Dispatch2\",\n    \"flowrateDispatch1\",\n    \"flowrateDispatch2\",\n    \"levelBST2\",\n    \"levelBST3\",\n    \"totalflowDispatch1\",\n    \"totalflowDispatch2\"\n];\n\nconst field_filter = original_fields.map(f => `r[\"_field\"] == \"${f}\"`).join(\" or \");\n\nconst query = `from(bucket: \"BST\")\n  |> range(start: ${startISO}, stop: ${stopISO})\n  |> filter(fn: (r) => r[\"_measurement\"] == \"bst\")\n  |> filter(fn: (r) => ${field_filter})`;\n\nmsg.payload = {\n    \"query\": query,\n    \"type\": \"flux\"\n};\n\n// Preserve date for filename\nmsg.date_str = dateStr;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 100,
+        "wires": [
+            [
+                "http_influx_req"
+            ]
+        ]
+    },
+    {
+        "id": "41a54d0e1231159a",
+        "type": "csv",
+        "z": "tab_get_data_native",
+        "name": "",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "mult",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 1630,
+        "y": 100,
+        "wires": [
+            [
+                "3a9caeefb2da3fe4"
+            ]
+        ]
+    },
+    {
+        "id": "3a9caeefb2da3fe4",
+        "type": "function",
+        "z": "tab_get_data_native",
+        "name": "Map & Filter Fields",
+        "func": "const rows = msg.payload;\nconst MAPPING = {\n    \"density_Dispatch1\": \"Density Dispatch 1\",\n    \"density_Dispatch2\": \"Density Dispatch 2\",\n    \"flowrateDispatch1\": \"Flowrate Dispatch 1\",\n    \"flowrateDispatch2\": \"Flowrate Dispatch 2\",\n    \"levelBST2\": \"Level BST 2\",\n    \"levelBST3\": \"Level BST 3\",\n    \"totalflowDispatch1\": \"Total Flow Dispatch 1\",\n    \"totalflowDispatch2\": \"Total Flow Dispatch 2\"\n};\n\nif (!rows || rows.length === 0) {\n    return null; // Stop if empty\n}\n\nconst processed = [];\n\nfor (let i = 0; i < rows.length; i++) {\n    let row = rows[i];\n    \n    // In python script, it ignores rows without _field or empty rows\n    if (!row._field) continue;\n    \n    // Mapping logic\n    if (MAPPING[row._field]) {\n        row._field = MAPPING[row._field];\n    }\n    \n    processed.push(row);\n}\n\nmsg.payload = processed;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1850,
+        "y": 100,
+        "wires": [
+            [
+                "ea2d22e499413724"
+            ]
+        ]
+    },
+    {
+        "id": "ea2d22e499413724",
+        "type": "csv",
+        "z": "tab_get_data_native",
+        "name": "Format to CSV",
+        "sep": ",",
+        "hdrin": false,
+        "hdrout": "all",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "result,table,_start,_stop,_time,_value,_field,_measurement",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 2040,
+        "y": 100,
+        "wires": [
+            [
+                "05a3fcafc45cc164"
+            ]
+        ]
+    },
+    {
+        "id": "05a3fcafc45cc164",
+        "type": "change",
+        "z": "tab_get_data_native",
+        "name": "Set Filename",
+        "rules": [
+            {
+                "t": "set",
+                "p": "filename",
+                "pt": "msg",
+                "to": "\"/data/csv/data_raw_\" & date_str & \".csv\"",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2240,
+        "y": 100,
+        "wires": [
+            [
+                "672f3c6d2c51d149"
+            ]
+        ]
+    },
+    {
+        "id": "672f3c6d2c51d149",
+        "type": "file",
+        "z": "tab_get_data_native",
+        "name": "Write CSV",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 2440,
+        "y": 100,
+        "wires": [
+            [
+                "8d483aad04e8f102"
+            ]
+        ]
+    },
+    {
+        "id": "8d483aad04e8f102",
+        "type": "debug",
+        "z": "tab_get_data_native",
+        "name": "Report Success",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "\"Saved: \" & filename",
+        "targetType": "jsonata",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2640,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "mqtt_in_test",
+        "type": "mqtt in",
+        "z": "mqtt_test_tab",
+        "name": "Receiver Test",
+        "topic": "test/topic",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "225831ad96b63749",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 100,
+        "wires": [
+            [
+                "debug_mqtt_test"
+            ]
+        ]
+    },
+    {
+        "id": "debug_mqtt_test",
+        "type": "debug",
+        "z": "mqtt_test_tab",
+        "name": "Debug Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 100,
+        "wires": []
+    }
+]
