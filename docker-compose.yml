@@ -49,58 +49,7 @@ services:
     networks:
       - iot-net
 
-  grafana-provisioner:    # Provision InfluxDB datasource
-    image: curlimages/curl:8.2.1
-    container_name: grafana-provisioner
-    depends_on:
-      - grafana
-    environment:
-      GF_ADMIN_USER: "${GF_ADMIN_USER}"
-      GF_ADMIN_PASSWORD: "${GF_ADMIN_PASSWORD}"
-      INFLUX_TOKEN: "${INFLUX_TOKEN}"
-      INFLUX_ORG: "${INFLUX_ORG}"
-      INFLUX_BUCKET: "${INFLUX_BUCKET}"
-    networks:
-      - iot-net
-    restart: "no"
-    command: >
-      /bin/sh -c '
-        until curl -sSf http://grafana:3000/api/health > /dev/null 2>&1; do sleep 2; done;
-        cat > /tmp/ds.json <<-JSON || exit 1
-        {
-          "name":"influxdb-auto",
-          "type":"influxdb",
-          "access":"proxy",
-          "url":"http://influxdb:8086",
-          "isDefault": true,
-          "jsonData": { "version":"Flux", "organization":"'"${INFLUX_ORG}"'", "defaultBucket":"'"${INFLUX_BUCKET}"'" },
-          "secureJsonData": { "token":"'"${INFLUX_TOKEN}"'" }
-        }
-        JSON
-        curl -s -u "${GF_ADMIN_USER}:${GF_ADMIN_PASSWORD}" -H "Content-Type: application/json" \
-          -X POST http://grafana:3000/api/datasources -d @/tmp/ds.json || true;
-        echo "grafana-provisioner finished";
-      '
 
-  grafana-importer: # Import dashboards to Grafana
-    image: alpine:3.18
-    container_name: grafana-importer
-    depends_on:
-      - grafana
-      - grafana-provisioner
-    environment:
-      GF_ADMIN_USER: "${GF_ADMIN_USER}"
-      GF_ADMIN_PASSWORD: "${GF_ADMIN_PASSWORD}"
-      TARGET_DS: "influxdb-auto"
-      GRAFANA_URL: "http://grafana:3000"
-    volumes:
-      - ./volumes/uploads:/uploads
-      - ./services/grafana/dashboards:/dashboards
-      - ./services/grafana/scripts/import.sh:/import-dashboards.sh
-    networks:
-      - iot-net
-    restart: "no"
-    entrypoint: ["/bin/sh", "/import-dashboards.sh"]
 
   nodered:  # Node-RED Service
     build:
