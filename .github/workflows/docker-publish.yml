@@ -36,6 +36,10 @@ jobs:
             dockerfile: services/nodered/Dockerfile
             context: services/nodered
             image-suffix: -nodered
+          - service: mosquitto
+            dockerfile: services/mosquitto/Dockerfile
+            context: services/mosquitto
+            image-suffix: -mosquitto
 
     steps:
       - name: Checkout repository

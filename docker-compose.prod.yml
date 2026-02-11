@@ -18,7 +18,6 @@ services:
       - iot-net
 
   grafana:
-    # Replace 'fajarenjoyneer' with your actual GitHub username or organization
     image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-fajarenjoyneer}/dashboard-iot-grafana:latest
     container_name: grafana-prod
     restart: unless-stopped
@@ -32,15 +31,12 @@ services:
       GF_SERVER_DOMAIN: "${GF_SERVER_DOMAIN:-localhost}"
       GF_LOG_MODE: "console"
       GF_USERS_DEFAULT_THEME: "light"
-    # In production, we don't bind-mount code (provisioning/dashboards/public) 
-    # because it's baked into the image. We only mount data.
     volumes:
       - grafana-data:/var/lib/grafana
     networks:
       - iot-net
       
   nodered:
-    # Replace 'fajarenjoyneer' with your actual GitHub username or organization
     image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-fajarenjoyneer}/dashboard-iot-nodered:latest
     container_name: nodered-prod
     restart: unless-stopped
@@ -54,15 +50,14 @@ services:
       - iot-net
 
   mosquitto:
-    image: eclipse-mosquitto:latest
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-fajarenjoyneer}/dashboard-iot-mosquitto:latest
     container_name: mosquitto-prod
     restart: unless-stopped
     ports:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      # In prod, we mount the config from the service definition
-      - ./services/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      # Config is baked into image
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
     networks:
