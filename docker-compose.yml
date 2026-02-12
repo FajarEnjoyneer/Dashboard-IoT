@@ -39,6 +39,10 @@ services:
       GF_PANELS_DISABLE_SANITIZE_HTML: "${GF_PANELS_DISABLE_SANITIZE_HTML:-true}"
       GF_NEWS_NEWS_FEED_ENABLED: "${GF_NEWS_NEWS_FEED_ENABLED:-false}"
       GF_LIVE_ENABLED: "false"
+      # Required for datasource provisioning
+      INFLUX_ORG: "${INFLUX_ORG}"
+      INFLUX_BUCKET: "${INFLUX_BUCKET}"
+      INFLUX_TOKEN: "${INFLUX_TOKEN}"
     volumes:
       # Mount source code for live development
       - ./services/grafana/public:/usr/share/grafana/public
