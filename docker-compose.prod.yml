@@ -31,7 +31,7 @@ services:
       GF_SERVER_DOMAIN: "${GF_SERVER_DOMAIN:-localhost}"
       GF_LOG_MODE: "console"
       GF_USERS_DEFAULT_THEME: "light"
-      GF_USERS_DEFAULT_THEME: "light"
+
       GF_PANELS_DISABLE_SANITIZE_HTML: "true"
       # Required for datasource provisioning
       INFLUX_ORG: "${INFLUX_ORG}"
